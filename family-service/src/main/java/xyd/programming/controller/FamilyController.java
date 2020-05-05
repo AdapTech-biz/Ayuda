@@ -36,7 +36,7 @@ public class FamilyController {
     }
 
     @GetMapping("demo")
-    public List<FamilyMember> getFamily() {
+    public List<FamilyMember> demo() {
 
         return this.familyTreeService.demoFamily();
     }
