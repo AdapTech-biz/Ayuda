@@ -30,6 +30,4 @@ public interface FamilyTreeService {
 
     List<Parent> demoFamily();
 
-    void setUniqueIds(FamilyMember member);
-
 }

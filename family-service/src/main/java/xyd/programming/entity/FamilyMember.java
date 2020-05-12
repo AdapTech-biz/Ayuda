@@ -13,8 +13,8 @@ import java.util.Set;
 public class FamilyMember {
 
 
-    private Long personId; //UUID for each member
-    private Long familyId; //id shared by entire family
+    private Long personId = 0L; //UUID for each member
+    private Long familyId = 0L; //id shared by entire family
     private String name;
     private Photo photo;
     private Role role;

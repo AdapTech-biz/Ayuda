@@ -26,7 +26,11 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
 
     @Override
     public void saveMember(FamilyMember member) {
-        parentRepository.saveMember((Parent) member);
+        if (member instanceof Parent) {
+            parentRepository.saveMember((Parent) member);
+        } else {
+            childRepository.saveMember((Child) member);
+        }
     }
 
     @Override
@@ -39,10 +43,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
         return random.nextLong();
     }
 
-    @Override
-    public void setUniqueIds(FamilyMember member) {
-        member.setPersonId(generateId());
-    }
 
     @Override
     public Parent createParent(String name, String email, String phone, FamilyTitle title) {
@@ -50,7 +50,7 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
         parent.setPersonId(generateId());
         parent.setFamilyId(generateId());
 
-        parentRepository.saveMember(parent);
+        saveMember(parent);
 
         return parent;
     }
@@ -64,12 +64,20 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
     public Child createChild(String childName, Gender gender, Parent forParent) {
         Child child = new Child(childName, gender);
         child.setPersonId(generateId());
-        child.setFamilyId(forParent.getFamilyId());
 
-        child.getParents().add(forParent.getPersonId()); //associates parent id to child
-        forParent.getChildren().add(child); //associates Child with parent
+        addChildToParent(forParent.getPersonId(), child);
+//        child.setFamilyId(forParent.getFamilyId());
+//        try{
+//
+//            assignFamilyId(forParent, child);
+//        } catch (FamilyServiceException familyServiceException) {
+//            log.debug(familyServiceException.getMessage());
+//        }
+//
+//        child.getParents().add(forParent.getPersonId()); //associates parent id to child
+//        forParent.getChildren().add(child); //associates Child with parent
 
-        childRepository.saveMember(child);
+        saveMember(child);
         parentRepository.updateMember(forParent);
 
 
@@ -79,7 +87,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
     @Override
     public Parent addChildToParent(Long parentId, Child child) {
        Parent parent =  parentRepository.findMemberById(parentId);
-
 
        parent.getChildren().add(child);
        child.getParents().add(parent.getPersonId());
@@ -98,16 +105,16 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
         //TODO: Check if child has max parents assigned
 
         Long familyId;
-        if (parent.getFamilyId() == null && child.getFamilyId() == null) {
+        if (parent.getFamilyId() == 0L && child.getFamilyId() == 0L) {
 
             familyId = generateId();
             parent.setFamilyId(familyId);
             child.setFamilyId(familyId);
             parentRepository.updateMember(parent);
-        } else if (parent.getFamilyId() != null && child.getFamilyId() == null) {
+        } else if (parent.getFamilyId() != 0L && child.getFamilyId() == 0L) {
             Long parentFamilyId = parent.getFamilyId();
             child.setFamilyId(parentFamilyId);
-        } else if (parent.getFamilyId() == null && child.getFamilyId() != null) {
+        } else if (parent.getFamilyId() == 0L && child.getFamilyId() != 0L) {
             Long childParentId = child.getParents().stream().findFirst().get();
             //check if parent is partners with child's parent
             boolean isPartners = parent.getPartner().getPersonId().equals(childParentId);
