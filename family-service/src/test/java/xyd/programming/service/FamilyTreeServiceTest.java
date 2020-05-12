@@ -1,7 +1,5 @@
 package xyd.programming.service;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -34,6 +32,9 @@ public class FamilyTreeServiceTest {
     private Parent parent;
     private Parent mom;
 
+    public FamilyTreeServiceTest() {
+    }
+
     @BeforeEach
     public void beforeEach() {
         familyTreeService = new FamilyTreeServiceImpl(parentRepository, childRepository);
@@ -59,9 +60,9 @@ public class FamilyTreeServiceTest {
     @Test
     void getParentById() {
 
-        Mockito.when(parentRepository.findMemberById(12345l)).thenReturn(this.parent);
+        Mockito.when(parentRepository.findMemberById(12345L)).thenReturn(this.parent);
 
-        Parent foundParent = familyTreeService.getParent(12345l);
+        Parent foundParent = familyTreeService.getParent(12345L);
 
         Assertions.assertThat(foundParent.getName()).isEqualTo("Xavier");
     }
@@ -80,15 +81,13 @@ public class FamilyTreeServiceTest {
     @Test
     @Tag("FamilyServiceTest")
     void createChildWithOutFamilyIds() {
-//        Parent parent = familyTreeService.createParent("Xavier", "email.com", "5554445555", FamilyTitle.Dad);
-//        parent.setPersonId(12345L);
+
         Mockito.when(parentRepository.findMemberById(12345L)).thenReturn(this.parent);
 
         Child child = familyTreeService.createChild("Zayden", Gender.Boy, this.parent);
 
         Assertions.assertThat(this.parent.getChildren().size()).isEqualTo(1);
         boolean childExist = this.parent.getChildren().stream().anyMatch((kid) -> kid.getName().equals("Zayden"));
-//        boolean childExist = parent.getChildren().contains(child);
 
         Assertions.assertThat(childExist).isTrue();
         boolean familyIdMatch = parent.getFamilyId().equals(child.getFamilyId());
@@ -142,24 +141,79 @@ public class FamilyTreeServiceTest {
     }
 
     @Test
-    void assignFamilyIds_WhenChildIsAlreadyAssignedId() throws Exception {
+    void assignFamilyIds_WhenOnlyChildIsAssignedId() {
         Child child = new Child("Tim", Gender.Boy);
         child.setFamilyId(7777L);
+        this.parent.setFamilyId(7777L);
+        child.getParents().add(this.parent.getPersonId());
 
-        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.parent, child));
+
+        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.mom, child))
+            .withMessage("Child is assigned parent & member doesn't have partner");
 //        familyTreeService.assignFamilyId(this.parent, child);
     }
 
+    @Test
+    void assignFamilyIds_WhenParentHasDiffPartner() {
+        Child child = new Child("Tim", Gender.Boy);
+        child.setFamilyId(7777L);
+        this.parent.setFamilyId(7777L);
+        child.getParents().add(this.parent.getPersonId());
+
+        Parent momPartner = new Parent("Mom_Partner", "email.com", "5554445555", FamilyTitle.Mom);
+        momPartner.setPersonId(6161L);
+        this.mom.setPartner(momPartner);
+
+
+        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.mom, child))
+                .withMessage("Member isn't partners with child's parent");
+    }
 
     @Test
-    @Ignore
-    void assignFamilyIds_WhenChildIsAlreadyAssignedParent() throws Exception {
+    void assignFamilyIds_WhenOnlyParentHasId() throws Exception {
         Child child = new Child("Tim", Gender.Boy);
+        this.parent.setFamilyId(7777L);
+        child.getParents().add(this.parent.getPersonId());
+
+        familyTreeService.assignFamilyId(this.parent, child);
+
+        Assertions.assertThat(child.getFamilyId()).isEqualTo(7777L);
+    }
+
+    @Test
+    void assignFamilyIds_WhenChildAndParentAssignedId() {
+        Child child = new Child("Tim", Gender.Boy);
+        child.setFamilyId(7777L);
+        this.parent.setFamilyId(7777L);
+        child.getParents().add(this.parent.getPersonId());
+
+
+        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.parent, child))
+                .withMessage("Two members already associated");
+    }
+
+    @Test
+    void assignFamilyIds_WhenChildAndParentHaveDiffAssignedId() {
+        Child child = new Child("Tim", Gender.Boy);
+        child.setFamilyId(7777L);
+        this.parent.setFamilyId(7770L);
+        child.getParents().add(this.parent.getPersonId());
+
+        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.parent, child))
+                .withMessage("Conflicting family IDs");
+    }
+
+    @Test
+    void assignFamilyIds_WhenChildIsAlreadyAssignedParent() throws Exception{
+        Child child = new Child("Tim", Gender.Boy);
+        child.setPersonId(9999L);
         child.setFamilyId(7777L);
         child.getParents().add(this.parent.getPersonId());
 
         this.parent.setPartner(this.mom);
+        this.mom.setPartner(this.parent);
         this.parent.setFamilyId(7777L);
+        this.parent.getChildren().add(child);
 
         familyTreeService.assignFamilyId(mom, child);
 

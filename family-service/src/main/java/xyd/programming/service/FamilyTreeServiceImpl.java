@@ -48,7 +48,7 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
     public Parent createParent(String name, String email, String phone, FamilyTitle title) {
         Parent parent = new Parent(name, email, phone, title );
         parent.setPersonId(generateId());
-        parent.setFamilyId(generateId());
+//        parent.setFamilyId(generateId());
 
         saveMember(parent);
 
@@ -115,25 +115,34 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
             Long parentFamilyId = parent.getFamilyId();
             child.setFamilyId(parentFamilyId);
         } else if (parent.getFamilyId() == 0L && child.getFamilyId() != 0L) {
-            Long childParentId = child.getParents().stream().findFirst().get();
+            Optional<Long> optionalLong = child.getParents().stream().findFirst();
+           Long childParentId = optionalLong.orElseGet(() -> optionalLong.orElse(0000L));
             //check if parent is partners with child's parent
-            boolean isPartners = parent.getPartner().getPersonId().equals(childParentId);
+//            boolean isPartners = parent.getPartner().getPersonId().equals(childParentId);
 
-            if(isPartners) {
-                Parent partner = parent.getPartner();
-                parent.setFamilyId(partner.getFamilyId());
+            Parent parentPartner = parent.getPartner();
 
-                parentRepository.updateMember(parent);
-            } else {
-                throw  new FamilyServiceException("CHILD ALREADY ASSIGNED TO PARENT && NOT PARTNERS");
-            }
+            if (parentPartner != null){
+                boolean isPartners = parentPartner.getPersonId().equals(childParentId);
+
+                if(isPartners) {
+                    Parent partner = parent.getPartner();
+                    parent.setFamilyId(partner.getFamilyId());
+
+                    parentRepository.updateMember(parent);
+                } else {
+                    throw  new FamilyServiceException("Member isn't partners with child's parent");
+                }
+            } else throw  new FamilyServiceException("Child is assigned parent & member doesn't have partner");
+
+
 
         } else {
             if (parent.getFamilyId().equals(child.getFamilyId())){
 
                throw  new FamilyServiceException("Two members already associated");
             } else
-                throw  new FamilyServiceException("conflicting family IDs");
+                throw  new FamilyServiceException("Conflicting family IDs");
         }
 
 
