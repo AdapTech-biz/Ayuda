@@ -66,20 +66,8 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
         child.setPersonId(generateId());
 
         addChildToParent(forParent.getPersonId(), child);
-//        child.setFamilyId(forParent.getFamilyId());
-//        try{
-//
-//            assignFamilyId(forParent, child);
-//        } catch (FamilyServiceException familyServiceException) {
-//            log.debug(familyServiceException.getMessage());
-//        }
-//
-//        child.getParents().add(forParent.getPersonId()); //associates parent id to child
-//        forParent.getChildren().add(child); //associates Child with parent
-
         saveMember(child);
         parentRepository.updateMember(forParent);
-
 
         return child;
     }
@@ -92,7 +80,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
        child.getParents().add(parent.getPersonId());
 
        try{
-
            assignFamilyId(parent, child); //both child and parent are update on method call
        }catch (FamilyServiceException familyServiceException) {
            log.debug(familyServiceException.getMessage());
@@ -117,9 +104,8 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
         } else if (parent.getFamilyId() == 0L && child.getFamilyId() != 0L) {
             Optional<Long> optionalLong = child.getParents().stream().findFirst();
            Long childParentId = optionalLong.orElseGet(() -> optionalLong.orElse(0000L));
-            //check if parent is partners with child's parent
-//            boolean isPartners = parent.getPartner().getPersonId().equals(childParentId);
 
+           //check if parent is partners with child's parent
             Parent parentPartner = parent.getPartner();
 
             if (parentPartner != null){
