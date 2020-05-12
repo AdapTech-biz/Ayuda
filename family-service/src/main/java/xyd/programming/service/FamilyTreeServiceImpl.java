@@ -1,6 +1,5 @@
 package xyd.programming.service;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
     public Parent createParent(String name, String email, String phone, FamilyTitle title) {
         Parent parent = new Parent(name, email, phone, title );
         parent.setPersonId(generateId());
-//        parent.setFamilyId(generateId());
 
         saveMember(parent);
 
@@ -131,7 +129,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
                 throw  new FamilyServiceException("Conflicting family IDs");
         }
 
-
         childRepository.updateMember(child);
 
     }
@@ -162,7 +159,6 @@ public class FamilyTreeServiceImpl implements FamilyTreeService {
 
     @Override
     public List<Parent> demoFamily() {
-
         return parentRepository.findAll();
     }
 
