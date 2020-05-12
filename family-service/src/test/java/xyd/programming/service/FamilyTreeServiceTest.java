@@ -32,8 +32,6 @@ public class FamilyTreeServiceTest {
     private Parent parent;
     private Parent mom;
 
-    public FamilyTreeServiceTest() {
-    }
 
     @BeforeEach
     public void beforeEach() {
@@ -218,8 +216,6 @@ public class FamilyTreeServiceTest {
         familyTreeService.assignFamilyId(mom, child);
 
         Assertions.assertThat(this.mom.getFamilyId()).isEqualTo(7777L);
-//        Assertions.assertThatExceptionOfType(FamilyServiceException.class).isThrownBy(()->familyTreeService.assignFamilyId(this.parent, child));
-//        familyTreeService.assignFamilyId(this.parent, child);
     }
 
 
