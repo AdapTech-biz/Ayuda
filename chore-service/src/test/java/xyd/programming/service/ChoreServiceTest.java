@@ -74,6 +74,18 @@ public class ChoreServiceTest {
         Mockito.when(choreRepository.findChoreById(List.of(this.chore.getId())))
                 .thenReturn(List.of(this.chore));
 
+        this.choreService.updateChore(chore);
         Assertions.assertEquals(ChoreStatus.Draft, this.chore.getStatus());
+    }
+
+    @Test
+    void updateChoreWhenAssigneeUnmodified() {
+        this.chore.setId(9090909L); //override chore Id for testing
+        this.chore.setAssigneeId(12345L);
+        Mockito.when(choreRepository.findChoreById(List.of(this.chore.getId())))
+                .thenReturn(List.of(this.chore));
+
+        this.choreService.updateChore(chore);
+        Assertions.assertEquals(ChoreStatus.Active, this.chore.getStatus());
     }
 }

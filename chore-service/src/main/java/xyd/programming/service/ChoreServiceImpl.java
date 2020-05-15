@@ -7,7 +7,6 @@ import xyd.programming.entity.Chore;
 import xyd.programming.entity.ChoreStatus;
 import xyd.programming.repository.ChoreRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
