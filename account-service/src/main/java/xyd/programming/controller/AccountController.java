@@ -22,9 +22,8 @@ public class AccountController {
     @GetMapping("/new/{id}")
     public Long createAccount(@PathVariable(value = "id", required = true) Long ownerId){
 
-        Account account = new Account(ownerId);
+        Account account = this.accountService.createAccount(ownerId);
 
-        accountService.generateAccountId(account);
         log.info("New account created: {}", account);
         //store Account
         return account.getAccountId();
