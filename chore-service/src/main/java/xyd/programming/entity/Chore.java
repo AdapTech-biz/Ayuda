@@ -18,7 +18,7 @@ public class Chore {
     private LocalDateTime deadline;
     private Long assigneeId;
     private Long assignorId;
-    private boolean isActive;
+    private ChoreStatus status;
     private final List<Long> gallery;
 
     public Chore(String title, double reward, String description, Long assignorId) {
@@ -27,7 +27,7 @@ public class Chore {
         this.description = description;
         this.assignorId = assignorId;
         this.deadline = null;
-        this.isActive = false;
+        this.status = ChoreStatus.Draft;
         this.gallery = new ArrayList<>();
     }
 }
