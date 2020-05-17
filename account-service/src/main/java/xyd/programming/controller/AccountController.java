@@ -2,10 +2,9 @@ package xyd.programming.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyd.programming.entity.Account;
+import xyd.programming.entity.PayoutTicket;
 import xyd.programming.service.AccountService;
 
 @Slf4j
@@ -19,7 +18,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/new/{id}")
+    @PostMapping("/new/{id}")
     public Long createAccount(@PathVariable(value = "id", required = true) Long ownerId){
 
         Account account = this.accountService.createAccount(ownerId);
@@ -28,6 +27,12 @@ public class AccountController {
         //store Account
         return account.getAccountId();
 
-
     }
+
+    @PostMapping("/transaction")
+    public boolean transaction(@RequestBody PayoutTicket payoutTicket) {
+        return this.accountService.startTransaction(payoutTicket.getAssignor(),
+                payoutTicket.getAssignee(), payoutTicket.getPayout());
+    }
+
 }
