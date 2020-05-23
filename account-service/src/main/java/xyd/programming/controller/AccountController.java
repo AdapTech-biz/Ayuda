@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import xyd.programming.entity.Account;
 import xyd.programming.entity.PayoutTicket;
 import xyd.programming.service.AccountService;
+import xyd.programming.util.Mappings;
 
 @Slf4j
 @RestController
@@ -18,7 +19,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/new/{id}")
+    @PostMapping(Mappings.NEW_ACCOUNT)
     public Long createAccount(@PathVariable(value = "id", required = true) Long ownerId){
 
         Account account = this.accountService.createAccount(ownerId);
@@ -29,10 +30,10 @@ public class AccountController {
 
     }
 
-    @PostMapping("/transaction")
+    // mapping to start transaction for account
+    @PostMapping(Mappings.TRANSACTION)
     public boolean transaction(@RequestBody PayoutTicket payoutTicket) {
-        return this.accountService.startTransaction(payoutTicket.getAssignor(),
-                payoutTicket.getAssignee(), payoutTicket.getPayout());
+        return this.accountService.startTransaction(payoutTicket);
     }
 
 }

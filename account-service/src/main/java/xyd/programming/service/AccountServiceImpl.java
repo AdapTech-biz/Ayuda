@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyd.programming.entity.Account;
+import xyd.programming.entity.PayoutTicket;
+import xyd.programming.entity.Transaction;
 import xyd.programming.repository.AccountRepository;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     private TransactionAction send = (double balance, double amount) -> balance - amount;
-    private TransactionAction receive = (double balance, double amount) -> balance + amount;
+    private TransactionAction receive = Double::sum;
 
     public AccountServiceImpl(AccountRepository<Account> accountRepository) {
         this.accountRepository = accountRepository;
@@ -34,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
     public Account createAccount(Long ownerId) {
         Account account = new Account(ownerId);
         account.setAccountId(generateAccountId());
+        this.accountRepository.saveAccount(account);
         return account;
     }
 
@@ -48,15 +51,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean startTransaction(Long assignor, Long assignee, double payoutAmount) {
+    public boolean startTransaction(PayoutTicket payoutTicket) {
         try{
-            Account assignorAccount = findAccountByOwnerId(assignor);
-            Account assigneeAccount = findAccountByOwnerId(assignee);
+            Account assignorAccount = findAccountByOwnerId(payoutTicket.getAssignor());
+            Account assigneeAccount = findAccountByOwnerId(payoutTicket.getAssignee());
 
-            if(checkOverdraw(assignorAccount.getBalance(), payoutAmount)) {
+            if(checkOverdraw(assignorAccount.getBalance(), payoutTicket.getPayout())) {
 
-                assignorAccount.setBalance(updateBalance(assignorAccount.getBalance(), payoutAmount, send));
-                assigneeAccount.setBalance(updateBalance(assigneeAccount.getBalance(), payoutAmount, receive));
+                assignorAccount.setBalance(updateBalance(assignorAccount.getBalance(), payoutTicket.getPayout(), send));
+                assigneeAccount.setBalance(updateBalance(assigneeAccount.getBalance(), payoutTicket.getPayout(), receive));
+
+                // Add completed transaction to accounts
+                assignorAccount.getTransactions().add(new Transaction(payoutTicket, false));
+                assigneeAccount.getTransactions().add(new Transaction(payoutTicket, true));
+
                 return  this.accountRepository.updateAccount(assigneeAccount) && this.accountRepository.updateAccount(assignorAccount);
 
             } else throw new Exception("Insufficient funds to complete payout");
