@@ -21,7 +21,7 @@ public class AccountController {
 
     @PostMapping(Mappings.NEW_ACCOUNT)
     public Long createAccount(@PathVariable(value = "id", required = true) Long ownerId){
-
+        log.info("Post request to AccountController - " + Mappings.NEW_ACCOUNT);
         Account account = this.accountService.createAccount(ownerId);
 
         log.info("New account created: {}", account);
@@ -33,6 +33,7 @@ public class AccountController {
     // mapping to start transaction for account
     @PostMapping(Mappings.TRANSACTION)
     public boolean transaction(@RequestBody PayoutTicket payoutTicket) {
+        log.info("Post request to AccountController - " + Mappings.TRANSACTION);
         return this.accountService.startTransaction(payoutTicket);
     }
 

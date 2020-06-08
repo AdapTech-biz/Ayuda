@@ -65,7 +65,9 @@ public class AccountServiceImpl implements AccountService {
                 assignorAccount.getTransactions().add(new Transaction(payoutTicket, false));
                 assigneeAccount.getTransactions().add(new Transaction(payoutTicket, true));
 
-                return  this.accountRepository.updateAccount(assigneeAccount) && this.accountRepository.updateAccount(assignorAccount);
+                this.accountRepository.updateAccount(assigneeAccount);
+                this.accountRepository.updateAccount(assignorAccount);
+                return true;
 
             } else throw new Exception("Insufficient funds to complete payout");
 
