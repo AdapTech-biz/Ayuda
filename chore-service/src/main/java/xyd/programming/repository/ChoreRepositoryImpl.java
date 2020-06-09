@@ -1,10 +1,12 @@
 package xyd.programming.repository;
 
+import org.springframework.stereotype.Service;
 import xyd.programming.entity.Chore;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class ChoreRepositoryImpl implements ChoreRepository<Chore> {
 
     private final Map<Long, Chore> choreDataSource = new Hashtable<>();

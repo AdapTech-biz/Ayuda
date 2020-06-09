@@ -1,5 +1,6 @@
 package xyd.programming.repository;
 
+import org.springframework.stereotype.Repository;
 import xyd.programming.entity.Account;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Repository
 public class AccountRepositoryImpl implements AccountRepository<Account> {
 
     private final Map<Long, Account> accountDataSource = new Hashtable<>();
