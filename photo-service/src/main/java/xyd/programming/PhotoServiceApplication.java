@@ -7,9 +7,11 @@ import xyd.programming.entity.Photo;
 
 @SpringBootApplication
 @EnableEurekaClient
+@Slf4j
 public class PhotoServiceApplication {
 
     public static void main(String[] args) {
+        Log.info("running Photo Service");
         SpringApplication.run(PhotoServiceApplication.class, args);
     }
 }
