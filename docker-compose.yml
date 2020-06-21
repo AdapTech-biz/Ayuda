@@ -1,0 +1,21 @@
+version: "3"
+services:
+    eureka:
+        build: ./eureka/
+        ports: 
+            - "8761:8761"
+    config:
+        image: xyd93/auyda-config:latest
+        depends_on: 
+            - eureka
+    zuul-gateway:
+        build: ./zuul-gateway/
+        depends_on: 
+            - eureka
+            - config
+        ports: 
+            - "8762:8762"
+    account-service:
+        build: ./account-service/
+        depends_on: 
+            - zuul-gateway

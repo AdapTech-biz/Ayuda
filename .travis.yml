@@ -1,0 +1,14 @@
+sudo: required
+language: java
+service: 
+    - docker
+addons:
+    apt:
+        packages:
+            - docker-ce
+
+before_install:
+    - cd eureka
+    - mvn clean install
+    - cd ..
+    - docker-compose up --build eureka
