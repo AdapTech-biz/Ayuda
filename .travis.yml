@@ -8,12 +8,7 @@ addons:
             - docker-ce
 
 script:
-    - cd eureka
-    - mvn clean install
-    
+    - ./travis-script.sh
+
 after_success:
-    - echo $PWD
-    - docker login -u $DOCKERID -p $DOCKERPWD
-    - export IMAGE_NAME=xyd93/ayuda-eureka
-    - docker build -t $IMAGE_NAME .
-    - docker push $IMAGE_NAME
+    - ./travis-after_success.sh
