@@ -13,4 +13,4 @@ script:
     - ./travis-script.sh
 
 after_success:
-    - ./travis-after_success.sh
+    - ./travis-after-success.sh
