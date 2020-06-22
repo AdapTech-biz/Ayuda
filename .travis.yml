@@ -7,8 +7,13 @@ addons:
         packages:
             - docker-ce
 
-before_install:
+script:
     - cd eureka
     - mvn clean install
-    - cd ..
-    - docker-compose up --build eureka
+    
+after_success:
+    - echo $PWD
+    - docker login -u $DOCKERID -p $DOCKERPWD
+    - export IMAGE_NAME=xyd93/ayuda-eureka
+    - docker build -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
