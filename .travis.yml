@@ -6,7 +6,9 @@ addons:
     apt:
         packages:
             - docker-ce
-
+before_install:
+    - chmod +x travis-script.sh
+    - chmod +x travis-after_success.sh
 script:
     - ./travis-script.sh
 
