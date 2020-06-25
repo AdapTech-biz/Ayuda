@@ -1,5 +1,7 @@
-FROM maven:3.6-amazoncorretto-11
-ARG APP_FILE=target/*.jar
-COPY ${APP_FILE} app.jar
-EXPOSE 8201
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+FROM openjdk
+EXPOSE 8761
+ARG DEPENDENCY=target/dependency
+COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY ${DEPENDENCY}/META-INF /app/META-INF
+COPY ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","xyd.programming.AccountServiceApplication"]
