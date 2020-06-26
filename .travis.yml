@@ -1,0 +1,28 @@
+sudo: required
+language: java
+service: 
+    - docker
+addons:
+    apt:
+        packages:
+            - docker-ce
+before_install:
+    - chmod +x ./travis-script.sh
+    - chmod +x ./travis-after-success.sh
+script:
+    - ./travis-script.sh
+
+after_success:
+    - ./travis-after-success.sh
+
+deploy:
+    on:
+        branch: master
+    provider: elasticbeanstalk
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: 
+        secure: $AWS_SECRET
+    region: "us-east-1"
+    app: "Ayuda"
+    env: "Ayuda-env"
+    bucket_name: "elasticbeanstalk-us-east-1-731975228932"
