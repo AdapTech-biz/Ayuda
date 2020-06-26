@@ -14,3 +14,16 @@ script:
 
 after_success:
     - ./travis-after-success.sh
+
+deploy:
+    on:
+        branch: master
+    provider: elasticbeanstalk
+    access_key_id:
+        secure: "Encrypted <access-key-id>=$AWS_ACCESS_KEY_ID"
+    secret_access_key:
+        secure: "Encypted <secret-access-key>=$AWS_SECRET"
+    region: "us-east-1"
+    app: "Ayuda"
+    env: "Ayuda-env"
+    bucket_name: "elasticbeanstalk-us-east-1-731975228932"
