@@ -22,6 +22,6 @@ deploy:
     access_key_id: "$AWS_ACCESS_KEY_ID"
     secret_access_key: "$AWS_SECRET"
     region: "us-east-1"
-    app: "AyudaMicroservice"
+    app: "Ayuda-MicroService"
     env: "AyudaMicroservice-env"
     bucket_name: "elasticbeanstalk-us-east-1-731975228932"
