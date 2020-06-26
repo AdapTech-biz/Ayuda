@@ -20,9 +20,9 @@ deploy:
         branch: master
     provider: elasticbeanstalk
     access_key_id: 
-        secure: "$AWS_ACCESS_KEY_ID"
+        secure: $AWS_ACCESS_KEY_ID
     secret_access_key: 
-        secure: $AWS_SECRET"
+        secure: $AWS_SECRET
     region: "us-east-1"
     app: "Ayuda"
     env: "Ayuda-env"
