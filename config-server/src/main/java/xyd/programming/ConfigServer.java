@@ -9,6 +9,12 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 public class ConfigServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(ConfigServer.class, args);
+        try {
+            Thread.sleep(3 * 1000);
+            SpringApplication.run(ConfigServer.class, args);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+        
     }
 }

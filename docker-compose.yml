@@ -1,0 +1,25 @@
+version: "3"
+services:
+    eureka:
+        build:
+            context: ./eureka
+        ports: 
+            - "8761:8761"
+    config:
+        build:
+            context: ./config-server
+        depends_on: 
+            - eureka
+    zuul-gateway:
+        build: 
+            context: ./zuul-gateway/
+        depends_on: 
+            - eureka
+            - config
+        ports: 
+            - "8762:8762"
+    account-service:
+        build: 
+            context: ./account-service/
+        depends_on: 
+            - zuul-gateway
