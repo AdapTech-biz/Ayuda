@@ -16,10 +16,7 @@
             "links": [
                 "config-server",
                 "account-service",
-                "zuul-gateway",
-                "photo-service",
-                "chore-service",
-                "family-service"
+                "zuul-gateway"
             ]
         },
         {
@@ -35,11 +32,7 @@
                 }
             ],
             "links": [
-                "account-service",
-                "chore-service",
-                "family-service",
-                "photo-service",
-                "eureka"
+                "account-service"
             ]
         },
         {
@@ -55,10 +48,6 @@
             ],
             "links": [
                 "account-service",
-                "chore-service",
-                "family-service",
-                "photo-service",
-                "eureka",
                 "config-server"
             ]
         },
@@ -66,16 +55,7 @@
             "name": "account-service",
             "image": "xyd93/ayuda-account:latest",
             "essential": false,
-            "memory": 250,
-            "links": [
-                "account-service",
-                "chore-service",
-                "family-service",
-                "photo-service",
-                "config-server",
-                "zuul-gateway",
-                "eureka"
-            ]
+            "memory": 250
         }
     ]
 }
