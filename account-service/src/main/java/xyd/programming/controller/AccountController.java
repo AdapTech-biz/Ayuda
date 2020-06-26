@@ -19,6 +19,11 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "Test route for Account Service";
+    }
+
     @PostMapping(Mappings.NEW_ACCOUNT)
     public Long createAccount(@PathVariable(value = "id", required = true) Long ownerId){
         log.info("Post request to AccountController - " + Mappings.NEW_ACCOUNT);

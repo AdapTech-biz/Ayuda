@@ -10,6 +10,12 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 @EnableZuulProxy
 public class ZuulGatewayMain {
     public static void main(String[] args) {
-        SpringApplication.run(ZuulGatewayMain.class, args);
+        
+        try {
+            Thread.sleep(15 * 1000);
+            SpringApplication.run(ZuulGatewayMain.class, args);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
