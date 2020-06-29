@@ -9,8 +9,8 @@
             "memory": 128,
             "portMappings": [
                 {
-                    "hostPort": 6781,
-                    "containerPort": 6781
+                    "hostPort": 8761,
+                    "containerPort": 8761
                 }
             ],
             "links": [
@@ -25,14 +25,9 @@
             "hostname": "config",
             "essential": false,
             "memory": 128,
-            "portMappings": [
-                {
-                    "hostPort": 8888,
-                    "containerPort": 8888
-                }
-            ],
             "links": [
-                "account-service"
+                "account-service",
+                "zuul-gateway"
             ]
         },
         {
@@ -47,15 +42,14 @@
                 }
             ],
             "links": [
-                "account-service",
-                "config-server"
-            ]
+                "account-service"
+                ]
         },
         {
             "name": "account-service",
             "image": "xyd93/ayuda-account:latest",
             "essential": false,
-            "memory": 250
+            "memory": 128
         }
     ]
 }
