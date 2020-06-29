@@ -6,7 +6,7 @@
             "image": "xyd93/ayuda-eureka:latest",
             "hostname": "eureka",
             "essential": true,
-            "memory": 250,
+            "memory": 128,
             "portMappings": [
                 {
                     "hostPort": 6781,
@@ -24,7 +24,7 @@
             "image": "xyd93/ayuda-config:latest",
             "hostname": "config",
             "essential": false,
-            "memory": 250,
+            "memory": 128,
             "portMappings": [
                 {
                     "hostPort": 8888,
@@ -39,7 +39,7 @@
             "name": "zuul-gateway",
             "image": "xyd93/ayuda-zuul:latest",
             "essential": true,
-            "memory": 250,
+            "memory": 128,
             "portMappings": [
                 {
                     "hostPort": 80,
